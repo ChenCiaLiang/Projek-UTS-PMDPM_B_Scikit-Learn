@@ -17,7 +17,7 @@ if selected == 'Klasifikasi':
     st.write('Untuk jenis kelamin bisa menggunakan st.radio')
     Sex = st.radio("Gender", ["Female", "Male"])
     st.write('Untuk beberapa kolom bisa menggunakan st.selectbox')
-    nama_kolom = st.selectedbox("Nama Kolom", ["Under", "Normal", "Over"])
+    nama_kolom = st.selectbox("Nama Kolom", ["Under", "Normal", "Over"])
 
     st.write('Untuk inputan manual bisa menggunakan st.number_input')
     panjang = st.number_input("Masukkan Input", 0)
@@ -48,7 +48,7 @@ if selected == 'Regresi':
     st.write('Untuk jenis kelamin bisa menggunakan st.radio')
     Sex = st.radio("Gender", ["Female", "Male"])
     st.write('Untuk beberapa kolom bisa menggunakan st.selectbox')
-    nama_kolom = st.selectedbox("Nama Kolom", ["Under", "Normal", "Over"])
+    nama_kolom = st.selectbox("Nama Kolom", ["Under", "Normal", "Over"])
 
     st.write('Untuk inputan manual bisa menggunakan st.number_input')
     panjang = st.number_input("Masukkan Input", 0)
@@ -72,5 +72,3 @@ if selected == 'Catatan':
     st.write('4. Referensi desain streamlit dapat di akses pada https://streamlit.io/.')
     st.write('5. Link streamlit desain ini dapat di akses pada https://apputs-6qzfvr4ufiyzhj84mrfkt7.streamlit.app/.')
     st.write('''6. Library pada file requirements yang dibutuhkan untuk deploy online di github ada 5 yaitu streamlit, scikit-learn, pandas, numpy, streamlit-option-menu.''')
-
-
