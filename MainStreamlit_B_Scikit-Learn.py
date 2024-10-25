@@ -1,67 +1,142 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
+import pickle
+import os
+
+def load_model(model_file):
+    model_directory = r'C:\Users\Lenovo\OneDrive\Documents\K\S 5\PMdPM\Projek-UTS-PMDPM_B_Scikit-Learn'
+    model_path = os.path.join(model_directory, model_file)
+    with open(model_path, 'rb') as f:
+        return pickle.load(f)
 
 with st.sidebar:
-    selected = option_menu('Tutorial Desain Streamlit UTS ML 24/25',
+    selected = option_menu('Proyek UTS ML 24/25',
                             ['Klasifikasi',
                             'Regresi', 'Catatan'],
                             default_index=0)
-
+    
 if selected == 'Klasifikasi':
-    st.title('Klasifikasi')
+    model = load_model('BestModel_CLF_GBT_Scikit-Learn.pkl')
+    
+    st.title("Prediksi Jenis Rumah")
+    st.write("Aplikasi ini membantu user untuk mengecek jenis rumah yang ingin dibeli")
 
-    st.write('Untuk Inputan File dataset (csv) bisa menggunakan st.file_uploader')
-    file = st.file_uploader("Masukkan File", type=["csv", "txt"])
-    st.write('Untuk usia bisa menggunakan st.slider')
-    Age = st.slider("Age", 0, 100)
-    st.write('Untuk jenis kelamin bisa menggunakan st.radio')
-    Sex = st.radio("Gender", ["Female", "Male"])
-    st.write('Untuk beberapa kolom bisa menggunakan st.selectbox')
-    nama_kolom = st.selectbox("Nama Kolom", ["Under", "Normal", "Over"])
+    squaremeters = st.number_input("Luas", min_value=0)
+    numberofrooms = st.number_input("Jumlah Kamar", min_value=0)
+    hasyard = st.selectbox("Apakah Memiliki Halaman?", ["yes", "no"])
+    haspool = st.selectbox("Apakah Memiliki Kolam Renang?", ["yes", "no"])
+    floors = st.number_input("Jumlah Lantai", min_value=0)
+    citycode = st.number_input("Kode Kota", min_value=0)
+    citypartrange = st.number_input("Rentang Partisi Kota", min_value=0)
+    numprevowners = st.number_input("Jumlah Pemilik Sebelumnya", min_value=0)
+    made = st.number_input("Tahun Dibuat", min_value=1900, max_value=2024)
+    isnewbuilt = st.selectbox("Apakah Baru Dibangun?", ["yes", "no"])
+    hasstormprotector = st.selectbox("Apakah Memiliki Pelindung Badai?", ["yes", "no"])
+    basement = st.number_input("luas Basement", min_value=0)
+    attic = st.number_input("attic", min_value=0)
+    garage = st.number_input("Luas Garasi", min_value=0)
+    hasstorageroom = st.selectbox("Apakah Memiliki Ruang Penyimpanan?", ["yes", "no"])
+    hasguestroom = st.number_input("Jumlah Kamar Tamu", min_value=0)
 
-    st.write('Untuk inputan manual bisa menggunakan st.number_input')
-    panjang = st.number_input("Masukkan Input", 0)
-    lebar = st.number_input("Masukkan Nilai Lebar", 0)
+    
+    if hasyard == "yes":
+        input_hasyard = 1
+    else:
+        input_hasyard =0;
+    
+    if haspool == "yes":
+        input_haspool = 1
+    else:
+        input_haspool =0;
+    
+    if isnewbuilt == "yes":
+        input_isnewbuilt = 1
+    else:
+        input_isnewbuilt =0;
+    
+    if hasstormprotector == "yes":
+        input_hasstormprotector = 1
+    else:
+        input_hasstormprotector =0;
+    
+    if hasstorageroom == "yes":
+        input_hasstorageroom = 1
+    else:
+        input_hasstorageroom =0;
 
-    jawaban = st.number_input("Masukkan Jawaban Anda", min_value = 0)
-    st.write('Tombol button(Menggunakan st.button)')
+    input_data = [[squaremeters, numberofrooms, input_hasyard, input_haspool, floors, citycode, citypartrange,
+                    numprevowners, made, input_isnewbuilt, input_hasstormprotector, basement, attic, garage,
+                    input_hasstorageroom, hasguestroom]]
 
-    hitung = st.button("Prediksi")
+    st.write("Data yang akan diinput ke model")
+    st.write(input_data)
 
-    if hitung:
-        luas_benar = panjang * lebar
-        st.write(f"Panjang: {panjang}, Lebar: {lebar}")
-
-        if jawaban == luas_benar:
-            st.success(f"Benar! Luas Persegi Panjang adalah {luas_benar}.")
-        else:
-            st.error(f"Salah! Luas Persegi Panjang yang benar adalah {luas_benar}.")
+    if st.button("Prediksi"):
+        model_prediction = model.predict(input_data)
+        outcome = {'Basic':'Basic', 'Luxury':'Luxury', 'Middle':'Middle'}
+        st.write(f"Property tersebut merupakan kelas :  **{outcome[model_prediction[0]]}**")
 
 
 if selected == 'Regresi':
-    st.title('Regresi')
+    model = load_model('BestModel_REG_SVR_Scikit-Learn.pkl')
 
-    st.write('Untuk Inputan File dataset (csv) bisa menggunakan st.file_uploader')
-    file = st.file_uploader("Masukkan File", type=["csv", "txt"])
-    st.write('Untuk usia bisa menggunakan st.slider')
-    Age = st.slider("Age", 0, 100)
-    st.write('Untuk jenis kelamin bisa menggunakan st.radio')
-    Sex = st.radio("Gender", ["Female", "Male"])
-    st.write('Untuk beberapa kolom bisa menggunakan st.selectbox')
-    nama_kolom = st.selectbox("Nama Kolom", ["Under", "Normal", "Over"])
+    st.title("Prediksi Harga Rumah")
+    st.write("Aplikasi ini membantu user untuk mengecek estimasi harga rumah")
 
-    st.write('Untuk inputan manual bisa menggunakan st.number_input')
-    panjang = st.number_input("Masukkan Input", 0)
-    lebar = st.number_input("Masukkan Nilai Lebar", 0)
-    alas = st.number_input("Masukkan Nilai Alas", 0, 100)
-    tinggi = st.number_input("Masukkan Nilai Tinggi", 0, 100)
+    squaremeters = st.number_input("Luas", min_value=0)
+    numberofrooms = st.number_input("Jumlah Kamar", min_value=0)
+    hasyard = st.selectbox("Apakah Memiliki Halaman?", ["yes", "no"])
+    haspool = st.selectbox("Apakah Memiliki Kolam Renang?", ["yes", "no"])
+    floors = st.number_input("Jumlah Lantai", min_value=0)
+    citycode = st.number_input("Kode Kota", min_value=0)
+    citypartrange = st.number_input("Rentang Partisi Kota", min_value=0)
+    numprevowners = st.number_input("Jumlah Pemilik Sebelumnya", min_value=0)
+    made = st.number_input("Tahun Dibuat", min_value=1900, max_value=2024)
+    isnewbuilt = st.selectbox("Apakah Baru Dibangun?", ["yes", "no"])
+    hasstormprotector = st.selectbox("Apakah Memiliki Pelindung Badai?", ["yes", "no"])
+    basement = st.number_input("luas Basement", min_value=0)
+    attic = st.number_input("attic", min_value=0)
+    garage = st.number_input("Luas Garasi", min_value=0)
+    hasstorageroom = st.selectbox("Apakah Memiliki Ruang Penyimpanan?", ["yes", "no"])
+    hasguestroom = st.number_input("Jumlah Kamar Tamu", min_value=0)
 
-    st.write('Tombol button(Menggunakan st.button)')
-    hitung = st.button("Prediksi")
+    
+    if hasyard == "yes":
+        input_hasyard = 1
+    else:
+        input_hasyard =0;
+    
+    if haspool == "yes":
+        input_haspool = 1
+    else:
+        input_haspool =0;
+    
+    if isnewbuilt == "yes":
+        input_isnewbuilt = 1
+    else:
+        input_isnewbuilt =0;
+    
+    if hasstormprotector == "yes":
+        input_hasstormprotector = 1
+    else:
+        input_hasstormprotector =0;
+    
+    if hasstorageroom == "yes":
+        input_hasstorageroom = 1
+    else:
+        input_hasstorageroom =0;
 
-    if hitung:
-        luas = 0.5 * alas * tinggi
-        st.write("Luas Segitiga Adalah", luas)
+    input_data = [[squaremeters, numberofrooms, input_hasyard, input_haspool, floors, citycode, citypartrange,
+                    numprevowners, made, input_isnewbuilt, input_hasstormprotector, basement, attic, garage,
+                    input_hasstorageroom, hasguestroom]]
+
+    st.write("Data yang akan diinput ke model: ")
+    st.write(input_data)
+
+    if st.button("Prediksi"):
+        model_prediction = model.predict(input_data)
+        formatted_price = "${:,.2f}".format(model_prediction[0])
+        st.write(f"Hasil prediksi model: {formatted_price}")
 
 if selected == 'Catatan':
     st.title('Catatan')
