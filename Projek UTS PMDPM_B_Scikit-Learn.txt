@@ -2,3 +2,4 @@ Link Github:
 https://github.com/ChenCiaLiang/Projek-UTS-PMDPM_B_Scikit-Learn
 
 Link Streamlit:
+https://pembelajaran-mesin-dan-pembelajaran-mendalam-dbkiki2mxd7bxp9b9.streamlit.app/
