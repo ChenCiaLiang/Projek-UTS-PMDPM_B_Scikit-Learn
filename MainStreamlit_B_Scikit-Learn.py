@@ -15,6 +15,8 @@ if selected == 'Klasifikasi':
     if os.path.exists(model):
         with open(model, 'rb') as f:
             loaded_model = pickle.load(f)
+
+        GBT_model = loaded_model
     
         st.title("Prediksi Jenis Rumah")
         st.write("Aplikasi ini membantu user untuk mengecek jenis rumah yang ingin dibeli")
@@ -62,15 +64,12 @@ if selected == 'Klasifikasi':
         else:
             input_hasstorageroom =0
 
-        input_data = [squaremeters, numberofrooms, input_hasyard, input_haspool, floors, citycode, citypartrange,
+        input_data = [[squaremeters, numberofrooms, input_hasyard, input_haspool, floors, citycode, citypartrange,
                         numprevowners, made, input_isnewbuilt, input_hasstormprotector, basement, attic, garage,
-                        input_hasstorageroom, hasguestroom]
-
-        st.write("Data yang akan diinput ke model")
-        st.write(input_data)
+                        input_hasstorageroom, hasguestroom]]
 
         if st.button("Prediksi"):
-            model_prediction = model.predict(input_data)
+            model_prediction = GBT_model.predict(input_data)
             outcome = {'Basic':'Basic', 'Luxury':'Luxury', 'Middle':'Middle'}
             st.write(f"Property tersebut merupakan kelas :  **{outcome[model_prediction[0]]}**")
     else:
@@ -83,6 +82,10 @@ if selected == 'Regresi':
     if os.path.exists(model):
         with open(model, 'rb') as f:
             loaded_model = pickle.load(f)
+
+        scaler = loaded_model[0]
+        feature_selector = loaded_model[1]
+        SVR_model = loaded_model[2]
 
         st.title("Prediksi Harga Rumah")
         st.write("Aplikasi ini membantu user untuk mengecek estimasi harga rumah")
@@ -133,12 +136,12 @@ if selected == 'Regresi':
         input_data = [squaremeters, numberofrooms, input_hasyard, input_haspool, floors, citycode, citypartrange,
                         numprevowners, made, input_isnewbuilt, input_hasstormprotector, basement, attic, garage,
                         input_hasstorageroom, hasguestroom]
-
-        st.write("Data yang akan diinput ke model: ")
-        st.write(input_data)
+        
+        input_data_scaled = scaler.transform([input_data])
+        input_data_selected = feature_selector.transform(input_data_scaled)
 
         if st.button("Prediksi"):
-            model_prediction = model.predict(input_data)
+            model_prediction = SVR_model.predict(input_data_selected)
             formatted_price = "${:,.2f}".format(model_prediction[0])
             st.write(f"Hasil prediksi model: {formatted_price}")
     else:
